@@ -61,6 +61,7 @@ public class Buffer {
 					try {
 						buffer.wait();
 					} catch (InterruptedException e) {
+				
 						e.printStackTrace();
 					}
 				}
@@ -68,6 +69,15 @@ public class Buffer {
 		}
 	} 
 
+	public void sacarConsultas() {
+		synchronized (buffer){
+			if(!buffer.isEmpty()){
+				buffer.remove(0);
+				buffer.notify();
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		try 
 		{
@@ -83,13 +93,14 @@ public class Buffer {
 				c.start();
 			}
 			for(int i = 0; i < numServidores; i++){
-				Servidor s = new Servidor(this);
+				Servidor s = new Servidor();
+				//FALTA PASARLE UN BUFFER AL SERVIDOR Y AL CLIENTE
 				s.start();
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		//leer datos y start a servidores y clientes
+		
 	}
 	
 }

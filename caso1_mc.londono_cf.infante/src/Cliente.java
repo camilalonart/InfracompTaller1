@@ -15,7 +15,7 @@ public class Cliente extends Thread{
         {
             buff.agregarConsulta();
         }
-        buff.setNumClientes(Buffer.get - 1);
+        buff.setNumClientes(Buffer.getNumClientes() - 1);
     }
 
 }
