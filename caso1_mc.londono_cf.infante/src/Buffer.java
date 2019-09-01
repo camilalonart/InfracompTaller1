@@ -47,7 +47,7 @@ public class Buffer {
 		return numClientes;
 	}
 	
-	public void agregarConsulta() {
+	public void agregarMensaje() {
 		Mensaje m = null;
 		while(m == null){
 			synchronized (buffer) {
@@ -69,7 +69,7 @@ public class Buffer {
 		}
 	} 
 
-	public void sacarConsultas() {
+	public void sacarMensajes() {
 		synchronized (buffer){
 			if(!buffer.isEmpty()){
 				buffer.remove(0);
@@ -85,7 +85,7 @@ public class Buffer {
 			int numServidores =  Integer.parseInt(br.readLine().split(":")[1]);
 			int capacidadBuffer =  Integer.parseInt(br.readLine().split(":")[1]);
 			numClientes =  Integer.parseInt(br.readLine().split(":")[1]);
-			int cantConsultas = 0;
+			int cantMensajes = 0;
 
 			for(int i = 0; i < numClientes; i++){
 				int n = Integer.parseInt(br.readLine());

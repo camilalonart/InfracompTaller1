@@ -13,7 +13,7 @@ public class Cliente extends Thread{
     {
         for (int i = 0; i < numConsultas; i++) 
         {
-            buff.agregarConsulta();
+            buff.agregarMensaje();
         }
         buff.setNumClientes(Buffer.getNumClientes() - 1);
     }
