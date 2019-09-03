@@ -1,8 +1,14 @@
 
 public class Servidor extends Thread {
-
-    public Servidor (){
-    	
+	private Buffer buffer;
+    public Servidor (Buffer b ){
+    	buffer = b;
     }
+	public Buffer getBuffer() {
+		return buffer;
+	}
+	public void setBuffer(Buffer buffer) {
+		this.buffer = buffer;
+	}
     
 }
