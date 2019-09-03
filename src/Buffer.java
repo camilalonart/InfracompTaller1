@@ -54,7 +54,7 @@ public class Buffer {
 				if(buffer.size() < capacidad){
 					m = new Mensaje((int)(Math.random()*20));
 					buffer.add(m);
-					System.out.println("Mensaje enviado");
+					System.out.println("Mensaje "+ m.toString() );
 				}
 				else{
 					System.out.println("No se pudo agregar porque esta lleno el buffer ");
@@ -75,7 +75,7 @@ public class Buffer {
 			if(!buffer.isEmpty()){
 				m = buffer.remove(0);
 				buffer.notify();
-				System.out.println("Se saco el mensaje " + m.toString());
+				System.out.println("Se saco el mensaje " + m.toString() );
 
 			}
 		}
