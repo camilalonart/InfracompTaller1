@@ -1,11 +1,12 @@
 public class Cliente extends Thread{
 
     private int numConsultas;
-    private static Buffer buff;
+    private Buffer buff;
 
-    public Cliente(int pNumConsultas)
+    public Cliente(int pNumConsultas, Buffer b)
     {
         numConsultas = pNumConsultas;
+        buff = b;
     }
 
     @Override
@@ -15,7 +16,7 @@ public class Cliente extends Thread{
         {
             buff.agregarMensaje();
         }
-        buff.setNumClientes(Buffer.getNumClientes() - 1);
+        Buffer.setNumClientes(Buffer.getNumClientes() - 1);
     }
 
 }

@@ -69,13 +69,15 @@ public class Buffer {
 		}
 	} 
 
-	public void sacarMensajes() {
+	public Mensaje sacarMensajes() {
+		Mensaje m = null;
 		synchronized (buffer){
 			if(!buffer.isEmpty()){
-				buffer.remove(0);
+				m = buffer.remove(0);
 				buffer.notify();
 			}
 		}
+		return m;
 	}
 	
 	public static void main(String[] args) {
@@ -86,21 +88,25 @@ public class Buffer {
 			int capacidadBuffer =  Integer.parseInt(br.readLine().split(":")[1]);
 			numClientes =  Integer.parseInt(br.readLine().split(":")[1]);
 			int cantMensajes = 0;
+			Buffer b = new Buffer(capacidadBuffer);
 
 			for(int i = 0; i < numClientes; i++){
 				int n = Integer.parseInt(br.readLine());
-				Cliente c = new Cliente(n);
+				Cliente c = new Cliente(n, b);
 				c.start();
 			}
 			for(int i = 0; i < numServidores; i++){
-				Servidor s = new Servidor();
-				//FALTA PASARLE UN BUFFER AL SERVIDOR Y AL CLIENTE
+				Servidor s = new Servidor(b);
 				s.start();
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public static int getMensajesRestantes() {
+		return mensajesRestantes;
 	}
 	
 }
