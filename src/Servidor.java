@@ -11,4 +11,5 @@ public class Servidor extends Thread {
 		this.buffer = buffer;
 	}
     
+	public void enviarMensaje() {}
 }
