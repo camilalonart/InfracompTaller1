@@ -24,7 +24,6 @@ public class Servidor extends Thread {
 			}
 			if(buffer.getMensajesRestantes() == 0){
 				try {
-					System.out.println("TERMINO serv. "+ this.hashCode());
 					join();
 				} catch (InterruptedException e) {
 					e.printStackTrace();

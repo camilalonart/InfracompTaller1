@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class Buffer {
-	private static final String RUTADATOS = "bla bla bla";
+	private static final String RUTADATOS = "./data/data.txt";
 	private ArrayList<Mensaje> buffer;
 	private int capacidad;
 	private static int mensajesRestantes;
