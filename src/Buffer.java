@@ -75,6 +75,8 @@ public class Buffer {
 			if(!buffer.isEmpty()){
 				m = buffer.remove(0);
 				buffer.notify();
+				System.out.println("Se saco el mensaje " + m.toString());
+
 			}
 		}
 		return m;
