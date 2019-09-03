@@ -17,7 +17,7 @@ public class Servidor extends Thread {
 			if(m != null){
 				synchronized (m){
 					m.setRespondido(true);
-					buffer.setMensajesFinalizados(buffer.getMensajesRestantes()-1);
+					buffer.setMensajesRestantes(buffer.getMensajesRestantes()-1);
 					System.out.println("Respuesta : "+ (m.getMensaje()));
 					m.notify();
 				}
