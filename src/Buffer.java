@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-
 public class Buffer {
 	private static final String RUTADATOS = "./data/data.txt";
 	private ArrayList<Mensaje> buffer;
@@ -31,91 +30,100 @@ public class Buffer {
 	public void setCapacidad(int capacidad) {
 		this.capacidad = capacidad;
 	}
-	
-	public static void setMensajesRestantes(int pmensajesRestantes) {
+
+	public void setMensajesRestantes(int pmensajesRestantes) {
 		mensajesRestantes = pmensajesRestantes;
 	}
 
-	public static void setNumClientes(int pNumClientes) {
+	public synchronized void setNumClientes(int pNumClientes) {
 		numClientes = pNumClientes;
 	}
 
 	public static String getRutadatos() {
 		return RUTADATOS;
 	}
+
 	public static int getNumClientes() {
 		return numClientes;
 	}
-	
-	public void agregarMensaje() {
-		Mensaje m = null;
-		while(m == null){
+
+	public void agregarMensaje(Cliente c) {
+		Mensaje m = new Mensaje((int) (Math.random() * 20), c);
+		while(!m.isRespondido())
+		{
+
 			synchronized (buffer) {
-				m = new Mensaje((int)(Math.random()*20));
-				if(buffer.size() < capacidad){
+
+				if (buffer.size() < capacidad) {
 					buffer.add(m);
-					System.out.println("Se agrega el mensaje"+ m.toString() );
-				}
-				else{
-					System.out.println("El mensaje" + m.toString() +" no se pudo agregar porque esta lleno el buffer ");
+					System.out.println("Se agrega el mensaje" + m.toString());
+					//				m.hola(); RAROOOOO
+
+				} else {
+					System.out.println("El mensaje" + m.toString() + " no se pudo agregar porque esta lleno el buffer ");
 					try {
 						buffer.wait();
 					} catch (InterruptedException e) {
-				
 						e.printStackTrace();
 					}
 				}
 			}
 		}
-	} 
+	}
 
 	public Mensaje sacarMensajes() {
 		Mensaje m = null;
-		synchronized (buffer){
-			if(!buffer.isEmpty()){
-				m = buffer.remove(0);
-				buffer.notify();
-				System.out.println("Se saco el mensaje" + m.toString() );
+		synchronized (buffer) {
 
+			if (!buffer.isEmpty()) {
+				m = buffer.remove(0);
+				buffer.notifyAll();
+				synchronized(m)
+				{
+					m.notify();
+					if(m.getC().getNumConsultas() == 0)
+					{
+						setNumClientes(Buffer.getNumClientes() - 1);
+					}
+					System.out.println("Se saco el mensaje" + m.toString());
+
+				}
 			}
 		}
 		return m;
 	}
-	
+
 	public static void main(String[] args) {
-		try 
-		{
+		try {
 			BufferedReader br = new BufferedReader(new FileReader(RUTADATOS));
-			int numServidores =  Integer.parseInt(br.readLine().split(":")[1]);
-			int capacidadBuffer =  Integer.parseInt(br.readLine().split(":")[1]);
-			numClientes =  Integer.parseInt(br.readLine().split(":")[1]);
+			int numServidores = Integer.parseInt(br.readLine().split(":")[1]);
+			int capacidadBuffer = Integer.parseInt(br.readLine().split(":")[1]);
+			numClientes = Integer.parseInt(br.readLine().split(":")[1]);
 			Buffer b = new Buffer(capacidadBuffer);
-			System.out.println("La capacidad del buffer es: "+ capacidadBuffer);
-			System.out.println("El numero de servidores: "+ numServidores);
+			System.out.println("La capacidad del buffer es: " + capacidadBuffer);
+			System.out.println("El numero de servidores: " + numServidores);
 			System.out.println("-------------------------------------------------");
 
-			for(int i = 0; i < numClientes; i++){
+			for (int i = 0; i < numClientes; i++) {
 				int n = Integer.parseInt(br.readLine());
 				Cliente c = new Cliente(n, b);
 				c.start();
 			}
-			
+
 			br.close();
-			for(int i = 0; i < numServidores; i++){
-				Servidor s = new Servidor(b, "Servidor"+i);
+			for (int i = 0; i < numServidores; i++) {
+				Servidor s = new Servidor(b, "Servidor" + i);
 				s.start();
 			}
-			
 
-
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public static int getMensajesRestantes() {
 		return mensajesRestantes;
 	}
-	
+
 }
