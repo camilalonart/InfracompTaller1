@@ -32,8 +32,8 @@ public class Buffer {
 		this.capacidad = capacidad;
 	}
 	
-	public static void setMensajesRestantes(int mensajesRestantes) {
-		mensajesRestantes = mensajesRestantes;
+	public static void setMensajesRestantes(int pmensajesRestantes) {
+		mensajesRestantes = pmensajesRestantes;
 	}
 
 	public static void setNumClientes(int pNumClientes) {
@@ -51,13 +51,13 @@ public class Buffer {
 		Mensaje m = null;
 		while(m == null){
 			synchronized (buffer) {
+				m = new Mensaje((int)(Math.random()*20));
 				if(buffer.size() < capacidad){
-					m = new Mensaje((int)(Math.random()*20));
 					buffer.add(m);
-					System.out.println("Mensaje "+ m.toString() );
+					System.out.println("Se agrega el mensaje"+ m.toString() );
 				}
 				else{
-					System.out.println("No se pudo agregar porque esta lleno el buffer ");
+					System.out.println("El mensaje" + m.toString() +" no se pudo agregar porque esta lleno el buffer ");
 					try {
 						buffer.wait();
 					} catch (InterruptedException e) {
@@ -75,7 +75,7 @@ public class Buffer {
 			if(!buffer.isEmpty()){
 				m = buffer.remove(0);
 				buffer.notify();
-				System.out.println("Se saco el mensaje " + m.toString() );
+				System.out.println("Se saco el mensaje" + m.toString() );
 
 			}
 		}
@@ -89,18 +89,25 @@ public class Buffer {
 			int numServidores =  Integer.parseInt(br.readLine().split(":")[1]);
 			int capacidadBuffer =  Integer.parseInt(br.readLine().split(":")[1]);
 			numClientes =  Integer.parseInt(br.readLine().split(":")[1]);
-			int cantMensajes = 0;
 			Buffer b = new Buffer(capacidadBuffer);
+			System.out.println("La capacidad del buffer es: "+ capacidadBuffer);
+			System.out.println("El numero de servidores: "+ numServidores);
+			System.out.println("-------------------------------------------------");
 
 			for(int i = 0; i < numClientes; i++){
 				int n = Integer.parseInt(br.readLine());
 				Cliente c = new Cliente(n, b);
 				c.start();
 			}
+			
+			br.close();
 			for(int i = 0; i < numServidores; i++){
-				Servidor s = new Servidor(b);
+				Servidor s = new Servidor(b, "Servidor"+i);
 				s.start();
 			}
+			
+
+
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
