@@ -1,7 +1,7 @@
 server:10
 buffCapacity:2
 clients:4
-2
-2
-2
-2
+10
+10
+10
+10

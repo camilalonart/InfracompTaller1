@@ -43,28 +43,42 @@ public class Buffer {
 		return RUTADATOS;
 	}
 
-	public static int getNumClientes() {
+	public synchronized int getNumClientes() {
 		return numClientes;
 	}
 
 	public void agregarMensaje(Cliente c) {
-		Mensaje m = new Mensaje((int) (Math.random() * 20), c);
+		Mensaje m = new Mensaje((int) (Math.random() * 1000), c);
 		while(!m.isRespondido())
 		{
 
 			synchronized (buffer) {
 
 				if (buffer.size() < capacidad) {
+					synchronized(m)
+					{
 					buffer.add(m);
 					System.out.println("Se agrega el mensaje" + m.toString());
-					//				m.hola(); RAROOOOO
+						try {
+							m.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}						
+					}
 
-				} else {
+				} 
+				else 
+				{
 					System.out.println("El mensaje" + m.toString() + " no se pudo agregar porque esta lleno el buffer ");
-					try {
-						buffer.wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					synchronized(c) {
+						try 
+						{
+							c.wait();
+						} 
+						catch (InterruptedException e) 
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -78,16 +92,15 @@ public class Buffer {
 			if (!buffer.isEmpty()) {
 				m = buffer.remove(0);
 				buffer.notifyAll();
-				synchronized(m)
-				{
-					m.notify();
-					if(m.getC().getNumConsultas() == 0)
-					{
-						setNumClientes(Buffer.getNumClientes() - 1);
-					}
-					System.out.println("Se saco el mensaje" + m.toString());
 
+				//					m.notify();
+				if(m.getC().getNumConsultas() == 0)
+				{
+					setNumClientes(getNumClientes() - 1);
 				}
+				System.out.println("Se saco el mensaje" + m.toString());
+
+
 			}
 		}
 		return m;

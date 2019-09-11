@@ -15,20 +15,30 @@ public class Servidor extends Thread {
 	@Override
 	public void run(){
 		while(true){
-			Mensaje m = buffer.sacarMensajes();
-			if(m != null){
+			synchronized(buffer)
+			{
+				if (!buffer.getBuffer().isEmpty()) {
+					Mensaje m = buffer.getBuffer().remove(0);
+					buffer.notifyAll();
+					
+					//Mensaje m = buffer.sacarMensajes();
+					if(m != null){
+						System.out.println("Se saco el mensaje" + m.toString());
+						synchronized (m){
+							m.setRespondido(true);
+							if(m.getC().getNumConsultas() == 0)
+							{
+								buffer.setNumClientes(buffer.getNumClientes() - 1);
+							}
+							m.notify();
 
-					synchronized (m){
-						m.setRespondido(true);
-						Cliente c = m.getC();
-						c.setNumConsultas(c.getNumConsultas()-1);
-
-						m.notify();
+						}
 					}
-			}
-			if(buffer.getNumClientes() == 0){
-				System.out.println("El servidor "+ nombre+" termino.");
-				break;
+				}
+				if(buffer.getNumClientes() == 0){
+					System.out.println("El servidor "+ nombre+" termino.");
+					break;
+				}
 			}
 			yield();
 		}

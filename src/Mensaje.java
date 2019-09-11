@@ -18,17 +18,7 @@ public class Mensaje {
 	}
 	public void setRespondido(boolean respondido) {
 		this.respondido = respondido;
-//		c.setNumConsultas(c.getNumConsultas() -1);
-	}
-	
-	public synchronized void hola()
-	{
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		c.setNumConsultas(c.getNumConsultas() -1);
 	}
 	
 	@Override
