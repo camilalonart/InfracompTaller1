@@ -71,7 +71,7 @@ public class Buffer {
 					synchronized(m)
 					{
 					buffer.add(m);
-					System.out.println("Se agrega el la consulta con cedula: " + m.toString());
+						System.out.println("Se agrega la consulta con cedula: " + m.toString());
 						try {
 							m.wait();
 						} catch (InterruptedException e) {
