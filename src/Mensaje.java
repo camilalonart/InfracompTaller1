@@ -3,6 +3,7 @@ public class Mensaje {
 	private int mensaje;
 	private boolean respondido;
 	private Cliente c;
+	
 	public Mensaje(int pmensaje, Cliente pc) {
 		mensaje = pmensaje;
 		c=pc;
@@ -23,7 +24,7 @@ public class Mensaje {
 	
 	@Override
 	public String toString() {
-		return " "+ mensaje;
+		return ""+ mensaje;
 	}
 	public Cliente getC() {
 		return c;

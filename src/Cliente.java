@@ -3,6 +3,7 @@ public class Cliente extends Thread{
     private int numConsultas;
     private Buffer buff;
     private int tamanoinicial;
+    
     public Cliente(int pNumConsultas, Buffer b)
     {
     	tamanoinicial = pNumConsultas;
@@ -16,9 +17,7 @@ public class Cliente extends Thread{
         for (int i = 0; i < tamanoinicial ; i++) 
         {
             buff.agregarMensaje(this);
-            
         }
-        
     }
 
 	public int getNumConsultas() {

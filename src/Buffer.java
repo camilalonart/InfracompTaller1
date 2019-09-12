@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Buffer {
 	private static final String RUTADATOS = "./data/data.txt";
@@ -46,9 +47,21 @@ public class Buffer {
 	public synchronized int getNumClientes() {
 		return numClientes;
 	}
+	
+	private int numAleatorio(int min, int max) 
+	{
+		if (min >= max)
+		{
+			throw new IllegalArgumentException("el rango no esta bien, hay que cambiarlo");
+		}
+
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
+	}
 
 	public void agregarMensaje(Cliente c) {
-		Mensaje m = new Mensaje((int) (Math.random() * 1000), c);
+		int cedula = numAleatorio(1000000000,1999999999);
+		Mensaje m = new Mensaje(cedula, c);
 		while(!m.isRespondido())
 		{
 
@@ -58,7 +71,7 @@ public class Buffer {
 					synchronized(m)
 					{
 					buffer.add(m);
-					System.out.println("Se agrega el mensaje" + m.toString());
+					System.out.println("Se agrega el la consulta con cedula: " + m.toString());
 						try {
 							m.wait();
 						} catch (InterruptedException e) {
@@ -69,7 +82,7 @@ public class Buffer {
 				} 
 				else 
 				{
-					System.out.println("El mensaje" + m.toString() + " no se pudo agregar porque esta lleno el buffer ");
+					System.out.println("La consulta de mensaje con cedula" + m.toString() + " no se pudo agregar porque esta lleno el buffer ");
 					synchronized(c) {
 						try 
 						{
@@ -83,27 +96,6 @@ public class Buffer {
 				}
 			}
 		}
-	}
-
-	public Mensaje sacarMensajes() {
-		Mensaje m = null;
-		synchronized (buffer) {
-
-			if (!buffer.isEmpty()) {
-				m = buffer.remove(0);
-				buffer.notifyAll();
-
-				//					m.notify();
-				if(m.getC().getNumConsultas() == 0)
-				{
-					setNumClientes(getNumClientes() - 1);
-				}
-				System.out.println("Se saco el mensaje" + m.toString());
-
-
-			}
-		}
-		return m;
 	}
 
 	public static void main(String[] args) {
